@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "dev:build": "npm run build && npm run start",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.2",
+    "@chakra-ui/react": "^2.2.1",
+    "@chakra-ui/theme-tools": "^2.0.2",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.9.0",
+    "@hookstate/broadcasted": "^3.0.3",
+    "@hookstate/core": "^4.0.0-rc13",
+    "@hookstate/persistence": "^3.0.1",
+    "chakra-react-select": "^4.1.3",
+    "focus-trap-react": "^9.0.2",
+    "framer-motion": "^6.3.0",
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-canvas-draw": "^1.2.1",
+    "react-color": "^2.19.3",
+    "react-dom": "^18.2.0",
+    "react-hooks-svgdrawing": "^2.1.2",
+    "react-use": "^17.4.0",
+    "use-sound": "^4.0.1"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^12.2.2",
+    "@svgr/webpack": "^6.2.1",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.19.0",
+    "eslint-config-next": "^12.2.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.2"
+  }
+}
