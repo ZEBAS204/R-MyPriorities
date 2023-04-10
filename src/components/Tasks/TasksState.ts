@@ -3,9 +3,9 @@
  * ? For more information see: https://hookstate.js.org/docs/getting-started
  */
 
-import { createState, useHookstate } from '@hookstate/core'
-import { Broadcasted } from '@hookstate/broadcasted'
-import { Persistence } from '@hookstate/persistence'
+import { useHookstate, extend } from '@hookstate/core'
+import { broadcasted } from '@hookstate/broadcasted'
+import { localstored } from '@hookstate/localstored'
 
 export { none } from '@hookstate/core'
 
@@ -25,27 +25,6 @@ export interface Task {
 	name: string
 	content: Array<TaskContent>
 	isPinned?: boolean
-}
-
-let wasAttached = false
-export function useTasksState() {
-	//* This function exposes the state directly.
-	//* i.e. the state is accessible directly outside of this module.
-	const state = useHookstate(taskState)
-
-	if (!wasAttached && typeof window !== 'undefined' && !taskState.promised) {
-		// Allow to sync data between tabs
-		taskState.attach(
-			Broadcasted('tasks-sync-channel', () => {
-				// Attach persistence plugin (Persist data in localStorage)
-				taskState.attach(Persistence('tasks-data'))
-			})
-		)
-
-		wasAttached = true
-	}
-
-	return state
 }
 
 // Fake data generator
@@ -75,56 +54,87 @@ const generator = () =>
 		}
 	)
 
-const taskState = createState<Task[]>(
-	new Promise((resolve) => {
-		// Emulate asynchronous loading of the initial state data.
-		// The real application would run some fetch request,
-		// to get the initial data from a server.
-		setTimeout(
-			() =>
-				resolve([
-					{
-						id: 'task-1',
-						name: 'Discover Hookstate',
-						content: generator(),
-					},
-					{
-						id: 'task-2',
-						name: 'Replace Redux by Hookstate',
-						content: generator(),
-					},
-					{
-						id: 'task-3',
-						name: 'Enjoy simpler code and faster application',
-						content: generator(),
-					},
-					{
-						id: 'task-image',
-						name: 'I like to break UIs in my free time!',
-						content: [
-							{
-								hasImage: true,
-								imageURL:
-									'https://bobbyhadz.com/images/blog/typescript-ignore-property-does-not-exist-on-type/banner.webp',
-							},
-						],
-					},
-					{
-						id: 'task-no-image',
-						name: 'I have a broken image 😈',
-						content: [
-							{
-								hasImage: true,
-								imageURL: 'https://unknownimage.com/a.png',
-								name: '😈😈😈',
-							},
-						],
-					},
-				]),
-			3000
-		)
-	})
-)
+const taskState = [
+	{
+		id: 'task-1',
+		name: 'Discover Hookstate',
+		content: generator(),
+	},
+	{
+		id: 'task-2',
+		name: 'Replace Redux by Hookstate',
+		content: generator(),
+	},
+	{
+		id: 'task-3',
+		name: 'Enjoy simpler code and faster application',
+		content: generator(),
+	},
+	{
+		id: 'task-image',
+		name: 'I like to break UIs in my free time!',
+		content: [
+			{
+				hasImage: true,
+				imageURL:
+					'https://bobbyhadz.com/images/blog/typescript-ignore-property-does-not-exist-on-type/banner.webp',
+			},
+		],
+	},
+	{
+		id: 'task-no-image',
+		name: 'I have a broken image 😈',
+		content: [
+			{
+				hasImage: true,
+				imageURL: 'https://unknownimage.com/a.png',
+				name: '😈😈😈',
+			},
+		],
+	},
+]
+
+const extensions = () => {
+	return extend(
+		// Allow to sync data between tabs
+		broadcasted({
+			// topic is optional,
+			// if it is not defined, the extension requires and
+			// uses the identifier from the @hookstate/identifiable
+			topic: 'tasks-sync-channel',
+		}) /*
+		localstored({
+			// key is optional,
+			// if it is not defined, the extension requires and
+			// uses the identifier from the @hookstate/identifiable
+			key: 'tasks-data',
+			initializer: async () => {
+				console.log('INITIALIZER????')
+				return Promise.resolve()
+			},
+			engine: {
+				getItem: async (key) => Promise.resolve('TEST'),
+
+				setItem: async (key, value) => {
+					console.log('set key, value', key, value)
+					return Promise.resolve()
+				},
+				removeItem: async (key) => {
+					console.log('remove key', key)
+					return Promise.resolve()
+				},
+			},
+		})
+		*/
+	)
+}
+
+export const useTasksState = () => {
+	//* This function exposes the state directly.
+	//* i.e. the state is accessible directly outside of this module.
+	const state = useHookstate(taskState /*, extensions()*/)
+	return state
+}
 
 // for example purposes, let's update the state outside of a React component
 /*
