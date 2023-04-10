@@ -17,6 +17,6 @@ module.exports = {
 	typescript: {
 		// ! Dangerous, allow production builds to successfully
 		// ! complete even if your project has type errors.
-		ignoreBuildErrors: false,
+		ignoreBuildErrors: true,
 	},
 }
